@@ -16,7 +16,7 @@ from sendgrid.helpers.mail import *
 YOUR_CLIENT_ID='0ae3e0aaab462eb'
 YOUR_CLIENT_SECRET='891355a82efb4a5390963c0a522816288a64c11b'
 API_KEY='a08a3ac8121d442ba5a967eecdca029d'
-SENDGRID_API_KEY="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"
+SENDGRID_API_KEY="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"
 
 
 
@@ -131,7 +131,7 @@ def post_view(request):
 
                     else:
                         message= "select a image"
-                        return render(request, 'post.html', {'message': message})
+                    return render(request, 'post.html', {'message': message})
 
             else:
                 form = PostForm()
@@ -214,7 +214,7 @@ def comment_view(request):
     else:
         return redirect('/login')
 
-# method to create upvote for comments
+
 def upvote_view(request):
     user = check_validation(request)
     comment = None
@@ -226,12 +226,10 @@ def upvote_view(request):
             print form.cleaned_data
 
             comment_id = int(form.cleaned_data.get('id'))
-
             comment = CommentModel.objects.filter(id=comment_id).first()
             print "upvoted not yet"
 
             if comment is not None:
-                # print ' unliking post'
                 print "upvoted"
                 comment.upvote_num += 1
                 comment.save()
@@ -245,51 +243,65 @@ def upvote_view(request):
         return redirect('/login/')
 
 
+def brand_view(image_url):
+    app = ClarifaiApp(api_key=API_KEY)
+    model = app.models.get("logo")
+    response = model.predict_by_url(url=image_url)
+    if response["status"]["code"] == 10000:
+        if response["outputs"]:
+                if response['outputs'][0]['data']:
+                    if response['outputs'][0]['data']['regions']:
+                        for j in range(len(response["outputs"][0]["data"]["regions"])):
+                            brand_name=response["outputs"][0]["data"]["regions"][j]["data"]["concepts"][0]["name"].lower()
+                            BrandModel.objects.create(brand=brand_name)
+                    else:
+                        print "No regions"
+                else:
+                    print "No data"
+        else:
+            print "No response"
+    else:
+        print 'Status code wrong'
+
+
+
 def win_points(user, image_url, caption):
+    brand_view(image_url)
     brands_in_caption = 0
-    brand_selected = ""
-    points = 0;
+    brand_selected = []
+    points = 0
     brands = BrandModel.objects.all()
 
     for brand in brands:
         if caption.__contains__(brand.name):
-            brand_selected = brand.name
+            brand_selected.append( brand.name)
             brands_in_caption += 1
-    image_caption = verify_image(image_url)
-    if brands_in_caption == 1:
-        points += 50
-        if image_caption.__contains__(brand_selected):
+    brand_name = verify_image(image_url)
+    if brand_name is not None:
+        if brand_name in brand_selected:
             points += 50
-    else:
-        if image_caption != "":
-            if BrandModel.objects.filter(name=image_caption):
-                points += 50
-    if points >= 50:
-        brand = BrandModel.objects.filter(name=brand_selected).first()
-        PointsModel.objects.create(user=user, brand=brand)
-        return "Post Added with 1 points"
-    else:
-        return "Post Added"
-
+            PointsModel.objects.create(user=user, brand=brand_name,points=points)
+            return"You won points"
+        else:
+            return "Post Added"
 
 
 def verify_image(image_url):
     app = ClarifaiApp(api_key=API_KEY)
     model = app.models.get("logo")
-    responce = model.predict_by_url(url=image_url)
-    if responce["status"]["code"] == 10000:
-        if responce["outputs"][0]["data"]:
-            return responce["outputs"][0]["data"]["regions"][0]["data"]["concepts"][0]["name"].lower()
+    response = model.predict_by_url(url=image_url)
+    if response["status"]["code"] == 10000:
+        if response["outputs"][0]["data"]:
+            return response["outputs"][0]["data"]["regions"][0]["data"]["concepts"][0]["name"].lower()
     return ""
 
 
 def points_view(request):
     user = check_validation(request)
     if user:
-
         points_model = PointsModel.objects.filter(user=user).order_by('-created_on')
-        points_model.total_points = len(PointsModel.objects.filter(user=user))
-        brands = BrandModel.objects.all()
+        points_model.total_points = len(PointsModel.objects.filter(user=user)) * 50
+        brands = PointsModel.objects.filter(user=user)
         return render(request, 'points.html', {'points_model': points_model, 'brands': brands, 'user': user})
     else:
         return redirect('/login/')

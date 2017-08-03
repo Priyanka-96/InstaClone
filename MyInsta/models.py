@@ -70,7 +70,6 @@ class CommentLikeModel(models.Model):
 
 class BrandModel(models.Model):
     name = models.CharField(max_length=255)
-    points = models.IntegerField(default=1)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
