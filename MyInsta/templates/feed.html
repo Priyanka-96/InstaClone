@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feed</title>
+
+   <style>
+    body{
+            margin:0 auto;
+           font-family: sans-serif;
+        }
+        .background-wrap{
+           position:fixed;
+           size:cover;
+            z-index:-1000;
+            width: 100%;
+            height: 100%;
+            overflow:hidden;
+            top: 0px;
+            left: 0px;
+        }
+        #video-bg-elem{
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom:0;
+            right:0;
+            min-width: 100%;
+            min-height: 100%;
+
+        }
+        .content{
+             position: absolute;
+            width: 100%;
+            min-height: 100%;
+            z-index: 1000;
+            background-color: rgb(0,0,0,0.5);
+
+        }
+        .main{
+
+            text-align:center;
+            font-size:60px;
+            font-weight:300;
+            color:white;
+            padding-top:0%;
+            margin-bottom:10px;
+
+
+        }
+
+    .container{
+            width:500px;
+            height:700px;
+            text-align:center;
+            background-color: rgba(192, 192, 192,0.7);
+            margin-top: 150px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:3cm;
+
+        }
+        .container-main{
+            width:1000px;
+            height:280px;
+            text-align:center;
+            background-color: rgba( 225, 138, 7,0.7);
+            margin-top: 150px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:2cm;
+        }
+
+        .post{
+
+            width:500px;
+            height:70px;
+            text-align:center;
+            background-color: rgba(  115, 44, 123,0.7);
+            margin-top: 150px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:2cm;
+
+        }
+
+    input[type="text"],input[type="password"]{
+            height:45px;
+            width:300px;
+            border:none;
+            font-size:18px;
+            border-radius: 4px;
+            margin-bottom:20px;
+            background-color : #fff;
+            padding-left:40px;
+        }
+
+    .form-input::before{
+            content="\f007";
+            position:absolute;
+            font-family:"FontAwesome";
+            padding-left:5px;
+            padding-top: 5px;
+            color:#9B59B6;
+            font-size: 30px;
+        }
+        .btn-post{
+            position:relative;
+            margin-top:18px;
+            padding:15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius:2px;
+            border: none;
+            background-color:red;
+            border-bottom:4px solid #27AE60;
+            margin-bottom:10px;
+        }
+        .btn-like{
+            padding:15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius:2px;
+            border: none;
+            background-color:red;
+            border-bottom:4px solid #27AE60;
+            margin-bottom:10px;
+        }
+        .btn-unlike{
+            padding:15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius:2px;
+            border: none;
+            background-color:green;
+            border-bottom:4px solid #27AE60;
+            margin-bottom:10px;
+        }
+        .btn-logout{
+        position: relative;
+        padding:15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius:2px;
+            border: none;
+            background-color:blue;
+            border-bottom:4px solid #27AE60;
+            margin-bottom:10px;
+            margin-left: 10px;
+        }
+
+          p{
+
+            text-align:center;
+            color: #fff;
+        }
+        a{
+            color: #fff;
+        }
+
+
+   </style>
+</head>
+<body>
+{{value}}
+    <div class="container-main">
+    <div class="main">
+
+                <h1> Instagram Clone</h1>
+                <h3>News Feed</h3>
+    </div>
+    </div>
+    <div class="post" >
+        <span style="display: inline;">
+            <form method="POST" action="/logout/" >
+                {% csrf_token %}
+            <input type="submit" class="btn-logout" value="Logout" >
+            </form>
+
+            <form method="post" action="/post/">
+                {% csrf_token %}
+                <input type="submit" class="btn-post" value="Create Post">
+
+            </form>
+        </span>
+    </div>
+    <div class="background-wrap">
+            <video id="video-bg-elem" preload="auto" autoplay="true" loop="loop" muted="true">
+                <source src="https://static.videezy.com/system/resources/previews/000/006/932/original/Girl_using_Snapchat.mp4" type="video/mp4">
+                Video not supported
+            </video>
+    </div>
+
+
+
+    {% for post in posts %}
+    <div class="container">
+        <div class="form-input">
+            <h3> Posted by: {{ post.user.username }} </h3>
+            <p>[{{ post.created_on }}]</p>
+            <img style="display:inline-block; width:350px; height:300px;"
+                 src="{{ post.image_url }}" /><br>
+            <span  style="display:inline-block;">{{ post.caption }}</span><br/><br/>
+        </div>
+
+        <div class="form-input" style="display:inline-block">
+                 {{ post.like_count }} likes this
+        </div>
+
+
+        <div class="form-input" style="display:inline-block">
+            <form method="POST" action="/like/">
+              {% csrf_token %}
+              <input type="hidden" name="post" value="{{ post.id }}" />
+                {% if post.has_liked %}
+                <input type="submit" class="btn-unlike" value="Unlike">
+                        <p>You have liked this post </p>
+                {% else %}
+                <input type="submit" class="btn-like" value="Like">
+                <p>You have not liked this post </p>
+                {% endif %}
+            </form>
+        </div>
+
+
+        <div class="form-input">
+            <form method="POST" action="/comment/">
+                  {% csrf_token %}
+                  <input type="hidden" name="post" value="{{ post.id }}" >
+                  <input type="text" name="comment_text" id="comment_text" placeholder="Make a comment.." value="{{ comment_text }}">
+                  {{ comment_text }}
+                <button type="submit" onclick="myFunction()" class="btn-like" value="Comment">comment</button>
+
+                <script>
+                function myFunction() {
+                    alert("comment has been sucessfully posted");
+                }
+                </script>
+
+            </form>
+        </div>
+
+        <div class="form-input">
+              {% for comment in post.comments %}
+
+                <p>
+                  {{ comment.user.username }}
+                  {{ comment.created_on }}: {{ comment.comment_text }}
+                </p>
+
+              {% endfor %}
+
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
