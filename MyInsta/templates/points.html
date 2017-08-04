@@ -15,7 +15,11 @@
         <a href="/self/" class="w3-bar-item w3-button">{{user.name}}</a>
         <a href="/post/" class="w3-bar-item w3-button">Add new Post</a>
         <a href="/points/" class="w3-bar-item w3-button">Points</a>
-        <a href="/logout/" class="w3-bar-item w3-button w3-right">Logout</a>
+        <form method="POST" action="/logout/" >
+                {% csrf_token %}
+            <input type="submit" class="btn-logout" value="Logout" >
+            </form>
+
     </div><br><br>
 <div class="w3-container  w3-half">
     <h2>Total Points: {{points_model.total_points}}</h2>

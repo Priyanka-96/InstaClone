@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+import ctypes
+
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from form import SignUpForm,LoginForm,PostForm,LikeForm,CommentForm,UpvoteForm,CommentLikeForm
@@ -82,10 +85,13 @@ def login_view(request):
                     response.set_cookie(key='session_token', value=token.session_token)
                     return response
                 else:
-                    response_data['message'] = 'Incorrect Password! Please try again!'
-                    note='Incorrect Password! Please try again!'
+                    response_data['message'] = 'Incorrect Username or Password ! Please try again!'
+                    note='Incorrect Username or Password! Please try again!'
                     return render(request, 'login.html', response_data, {'message': note})
-
+            else:
+                response_data['message'] = 'Incorrect Username or Password! Please try again!'
+                note = 'Incorrect Username or Password! Please try again!'
+                return render(request, 'login.html', response_data, {'message': note})
 
     elif request.method == 'GET':
         form = LoginForm()
@@ -168,6 +174,7 @@ def like_view(request):
         existing_like = LikeModel.objects.filter(post_id=post_id, user=user).first()
         if not existing_like:
             LikeModel.objects.create(post_id=post_id, user=user)
+
             postget = PostModel.objects.filter(id=post_id).first()
             userid = postget.user_id
             user = UserModel.objects.filter(id=userid).first()
@@ -179,10 +186,14 @@ def like_view(request):
             content = Content("text/plain", "You got a like on your post! check it out:)")
             mail = Mail(from_email, subject, to_email, content)
             response = sg.client.mail.send.post(request_body=mail.get())
-
+            ctypes.windll.user32.MessageBoxW(0,"You have successfully liked the post :)", "Success :)", 1)
         else:
             existing_like.delete()
-        return redirect('/feed/')
+
+            ctypes.windll.user32.MessageBoxW(0,"You have successfully unliked the post :)", "Success :)", 1)
+
+        return redirect('/feed')
+
   else:
     return redirect('/login/')
 
@@ -207,10 +218,15 @@ def comment_view(request):
             content = Content("text/plain", "Someone just commented on your post! check it out:)")
             mail = Mail(from_email, subject, to_email, content)
             response = sg.client.mail.send.post(request_body=mail.get())
+            ctypes.windll.user32.MessageBoxW(0,"You have successfully commented on the post :)", "Success :)", 1)
 
             return redirect('/feed/')
+
         else:
             return redirect('/feed/')
+            ctypes.windll.user32.MessageBoxW(0,"You are unsuccessful in commenting on post :)", "UnSuccessful :(", 1)
+
+
     else:
         return redirect('/login')
 
@@ -236,7 +252,6 @@ def upvote_view(request):
                 print comment.upvote_num
             else:
                 print 'stupid mistake'
-                #liked_msg = 'Unliked!'
 
         return redirect('/login_success/')
     else:
