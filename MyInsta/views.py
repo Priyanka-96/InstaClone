@@ -231,31 +231,6 @@ def comment_view(request):
         return redirect('/login')
 
 
-def upvote_view(request):
-    user = check_validation(request)
-    comment = None
-    print "upvote view"
-    if user and request.method == 'POST':
-
-        form = UpvoteForm(request.POST)
-        if form.is_valid():
-            print form.cleaned_data
-
-            comment_id = int(form.cleaned_data.get('id'))
-            comment = CommentModel.objects.filter(id=comment_id).first()
-            print "upvoted not yet"
-
-            if comment is not None:
-                print "upvoted"
-                comment.upvote_num += 1
-                comment.save()
-                print comment.upvote_num
-            else:
-                print 'stupid mistake'
-
-        return redirect('/login_success/')
-    else:
-        return redirect('/login/')
 
 
 def brand_view(image_url):
