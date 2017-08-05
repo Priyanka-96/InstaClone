@@ -28,6 +28,8 @@
         <th>Brand Name</th>
         <th>Points</th>
         <th>Date</th>
+        <th>Image Url</th>
+        <th>Image caption</th>
       </tr>
     </thead>
     {% for data in points_model %}
@@ -35,6 +37,8 @@
             <td>{{data.brand.name}}</td>
             <td>{{data.points}}</td>
             <td>{{data.created_on}}</td>
+            <td>{{data.user.post.image_url}}</td>
+            <td>{{data.user.post.caption}}</td>
         </tr>
     {% endfor %}
     </table>

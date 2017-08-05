@@ -12,14 +12,9 @@ from InstaClone.settings import BASE_DIR
 from clarifai.rest import ClarifaiApp
 import sendgrid
 from sendgrid.helpers.mail import *
+from keys import SENDGRID_API_KEY,YOUR_CLIENT_ID,YOUR_CLIENT_SECRET,API_KEY
 
 
-
-
-YOUR_CLIENT_ID='0ae3e0aaab462eb'
-YOUR_CLIENT_SECRET='891355a82efb4a5390963c0a522816288a64c11b'
-API_KEY='a08a3ac8121d442ba5a967eecdca029d'
-SENDGRID_API_KEY="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"
 
 
 
@@ -269,7 +264,7 @@ def win_points(user, image_url, caption):
     brand_name = verify_image(image_url)
     if brand_name is not None:
         if brand_name in brand_selected:
-            points += 50
+
             brand_var=BrandModel.objects.filter(name=brand_name).order_by('-created_on')
             newpoint =PointsModel.objects.create(user=user, brand=brand_var[0],points=points)
             newpoint.save()
