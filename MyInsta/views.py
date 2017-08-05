@@ -144,8 +144,8 @@ def post_view(request):
             return render(request, 'post.html', {'form' : form})
         else:
             return redirect('/login')
-    except:
-        ValueError
+    except ValueError as e:
+        print e
 
 def logout_view(request):
     user = check_validation(request)
@@ -243,7 +243,7 @@ def brand_view(image_url):
                     if response['outputs'][0]['data']['regions']:
                         for j in range(len(response["outputs"][0]["data"]["regions"])):
                             brand_name=response["outputs"][0]["data"]["regions"][j]["data"]["concepts"][0]["name"].lower()
-                            BrandModel.objects.create(brand=brand_name)
+                            BrandModel.objects.create(name=brand_name)
                     else:
                         print "No regions"
                 else:
@@ -270,7 +270,9 @@ def win_points(user, image_url, caption):
     if brand_name is not None:
         if brand_name in brand_selected:
             points += 50
-            PointsModel.objects.create(user=user, brand=brand_name,points=points)
+            brand_var=BrandModel.objects.filter(name=brand_name).order_by('-created_on')
+            newpoint =PointsModel.objects.create(user=user, brand=brand_var[0],points=points)
+            newpoint.save()
             return"You won points"
         else:
             return "Post Added"

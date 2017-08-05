@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <title>Points</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}" >
+
 </head>
 <body>
 
@@ -50,10 +49,10 @@
         <th>Points</th>
       </tr>
     </thead>
-    {% for brand in brands %}
+    {% for data in points_model %}
         <tr>
-            <td>{{brand.name}}</td>
-            <td>{{brand.points}}</td>
+            <td>{{data.brand.name}}</td>
+            <td>{{data.points}}</td>
         </tr>
     {% endfor %}
     </table>
