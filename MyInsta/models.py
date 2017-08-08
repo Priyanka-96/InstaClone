@@ -13,7 +13,7 @@ class UserModel(models.Model):
     """
     email=models.EmailField(null=False)
     name=models.CharField(max_length=120,unique=True,null=False)
-    username=models.CharField(max_length=120)
+    username=models.CharField(max_length=120,null=False)
     password=models.CharField(max_length=255)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -38,6 +38,7 @@ class PostModel(models.Model):
   caption = models.CharField(max_length=240)
   created_on = models.DateTimeField(auto_now_add=True)
   updated_on = models.DateTimeField(auto_now=True)
+  has_liked = False
 
   @property  #signifies a derived value , virtual column
   def like_count(self):
@@ -60,6 +61,12 @@ class CommentModel(models.Model):
   comment_text = models.CharField(max_length=555)
   created_on = models.DateTimeField(auto_now_add=True)
   updated_on = models.DateTimeField(auto_now=True)
+  has_liked = False
+
+  @property
+  def comment_like(self):
+      return len(LikeModel.objects.filter(post=self))
+
 
 class CommentLikeModel(models.Model):
     user = models.ForeignKey(UserModel)
@@ -79,6 +86,8 @@ class PointsModel(models.Model):
     brand = models.ForeignKey(BrandModel)
     points = models.IntegerField(default=1)
     total_points = 0
+    image_url = models.CharField(max_length=255,default=None)
+    caption = models.CharField(max_length=255,default=None)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 

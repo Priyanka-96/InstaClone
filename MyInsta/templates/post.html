@@ -12,38 +12,151 @@
         if( "{{error}}" == "Post Added with 1 points"){
             window.location.href = "/feed/";}
     {% endif %}
-    </script>
+</script>
+ <style>
+  body{
+            margin:0 auto;
+           font-family: sans-serif;
+        }
+        .background-wrap{
+           position:fixed;
+           size:cover;
+            z-index:-1000;
+            width: 100%;
+            height: 100%;
+            overflow:hidden;
+            top: 0px;
+            left: 0px;
+        }
+        #video-bg-elem{
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom:0;
+            right:0;
+            min-width: 100%;
+            min-height: 100%;
+
+        }
+          .main{
+
+            text-align:center;
+            font-size:60px;
+            font-weight:300;
+            color:white;
+            padding-top:0%;
+            margin-bottom:10px;
+
+
+        }
+         .container-main{
+            width:1000px;
+            height:280px;
+            text-align:center;
+            background-color: rgba( 224,64,80,0.7);
+            margin-top: 150px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:2cm;
+
+        }
+         header {
+      text-align: center;
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHsQzZECC4k0cBVDwKTWDQKyz0AxM9bmlLdO0y0uKMH5uLu21i');
+      background-size: cover;
+      color: white;
+    }
+     ul {
+      padding:10px;
+      background: rgba(0,0,0,0.5);
+    }
+    li {
+      display: inline;
+      padding: 0px 10px 0px 10px;
+    }
+    a {
+      color: white;
+    }
+.btn-default{
+              position:relative;
+            margin-top:18px;
+            padding:15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius:2px;
+            border: none;
+            background-color:black;
+            border-bottom:4px solid #27AE60;
+            margin-bottom:10px;
+        }
+
+
+    .container_background{
+            width:500px;
+            height:400px;
+            text-align:center;
+            background-color: rgba(192, 192, 192,0.7);
+            margin-top: 150px;
+            margin-right:500px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:3cm;
+
+        }
+
+</style>
+
 </head>
 
 <body>
 
-    <div class="w3-bar w3-teal">
-        <h2 class="w3-center">Instagram</h2>
+    <div class="background-wrap">
+            <video id="video-bg-elem" preload="auto" autoplay="true" loop="loop" muted="true">
+                <source src="https://ak3.picdn.net/shutterstock/videos/7424503/preview/stock-footage-upload-screen-progress-bar-digital-screen-of-uploading-progress-bar.mp4" type="video/mp4">
+                Video not supported
+            </video>
     </div>
-    <div class="w3-bar w3-grey">
-        <a href="/feed/" class="w3-bar-item w3-button">Home</a>
-        <a href="/self/" class="w3-bar-item w3-button">{{user.name}}</a>
-        <a href="/post/" class="w3-bar-item w3-button">Add new Post</a>
-        <a href="/points/" class="w3-bar-item w3-button">Points</a>
-          <form method="POST" action="/logout/" >
-                {% csrf_token %}
-            <input type="submit" class="btn-logout" value="Logout" >
-            </form>
 
-    </div><br><br>
+<div class="container-main">
+    <div class="main">
 
-    <div class="w3-card-4 w3-margin w3-display-middle w3-half" style="max-width:600px">
-        <div class="w3-container w3-teal">
-            <h2>Upload Media</h2>
-        </div>
+                <h1> Instagram Clone</h1>
+                <h3>Upload post</h3>
+
+    </div>
+    </div>
+
+
+  </header>
+<header>
+    <ul>
+        <li> <a href="/feed/" class="w3-bar-item w3-button">Home</a></li>
+        <li>  <a href="/self/" class="w3-bar-item w3-button">{{user.name}}</a></li>
+        <li> <a href="/post/" class="w3-bar-item w3-button" >Add new Post</a></li>
+        <li><a href="/points/" class="w3-bar-item w3-button">Points</a></li>
+    </ul>
+</header>
+
+<div class="container_background">
+    <div class="container_main" >
+
+            <h1 >Upload Media</h1>
+            <h1>Contest:</h1>
+            <p>GRAB THE OFFER : Upload picture with brand in it and mention the name of brand in your caption to win points. You will win 50 points for each post with a brand in it. Make sure the logo of brand is clearely visible and your caption contains that brand name:) </p>
+
         <form name="myform" class="w3-container w3-margin" enctype="multipart/form-data" method="post" onsubmit="return validateLoginForm()"><br>
             {% csrf_token %}
             <input class="" name="image" type="file" style="margin-left:5px" value={{ image }}> <br><br>
             <input class="w3-input" name="caption" type="text" placeholder="Caption" size="30" value={{ caption }}><br>
-            <input class="w3-btn w3-ripple w3-teal " type="submit"  value="Add Image"><br><br>
+            <input class="btn-default" type="submit"  value="Add Image"><br><br>
         </form>
+        <form method="POST" action="/logout/" >
+                {% csrf_token %}
+            <input type="submit" class="btn-default" value="Logout" >
+            </form>
     </div>
 
+</div>
 </body>
 
 </html>

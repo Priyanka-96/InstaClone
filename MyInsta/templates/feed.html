@@ -64,7 +64,7 @@
             width:1000px;
             height:280px;
             text-align:center;
-            background-color: rgba( 225, 138, 7,0.7);
+            background-color: rgba( 51,179,166,0.7);
             margin-top: 150px;
             border-radius:4px;
             margin:0 auto;
@@ -185,6 +185,7 @@
                 <input type="submit" class="btn-post" value="Create Post">
 
             </form>
+
         </span>
     </div>
     <div class="background-wrap">
@@ -240,14 +241,16 @@
         </div>
 
         <div class="form-input">
+             <span style="display: inline;">
               {% for comment in post.comments %}
 
                 <p>
                   {{ comment.user.username }}
-                  {{ comment.created_on }}: {{ comment.comment_text }}
+                  ({{ comment.created_on }}): {{ comment.comment_text }}
                 </p>
 
               {% endfor %}
+        </span>
 
         </div>
         {% endfor %}

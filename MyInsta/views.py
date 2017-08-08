@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import ctypes
 
 from django.http import HttpResponse
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,render_to_response
 from form import SignUpForm,LoginForm,PostForm,LikeForm,CommentForm,UpvoteForm,CommentLikeForm
 from models import UserModel,UserSession,PostModel,LikeModel,CommentModel,BrandModel,PointsModel,CommentLikeModel
 from django.contrib.auth.hashers import make_password,check_password
@@ -226,6 +226,28 @@ def comment_view(request):
         return redirect('/login')
 
 
+def upvote_view(request):
+    user = check_validation(request)
+    if user and request.method == 'POST':
+        form = CommentLikeForm(request.POST)
+        if form.is_valid():
+            comment_id = form.cleaned_data.get('comment').id
+            existing_vote = CommentLikeModel.objects.filter(comment_id=comment_id, user=user).first()
+            if not existing_vote:
+                CommentLikeModel.objects.create(comment_id=comment_id, user=user)
+
+                commentget = CommentModel.objects.filter(id=comment_id).first()
+                userid = commentget.user_id
+                user = UserModel.objects.filter(id=userid).first()
+            else:
+                existing_vote.delete()
+
+                ctypes.windll.user32.MessageBoxW(0, "You have successfully unliked the post :)", "Success :)", 1)
+
+            return redirect('/feed')
+
+    else:
+        return redirect('/login/')
 
 
 def brand_view(image_url):
@@ -256,24 +278,23 @@ def win_points(user, image_url, caption):
     brand_selected = []
     points = 0
     brands = BrandModel.objects.all()
-
     for brand in brands:
         if caption.__contains__(brand.name):
             brand_selected.append( brand.name)
             brands_in_caption += 1
-    brand_name = verify_image(image_url)
+    brand_name = check_image(image_url)
     if brand_name is not None:
         if brand_name in brand_selected:
-
+            points +=50
             brand_var=BrandModel.objects.filter(name=brand_name).order_by('-created_on')
-            newpoint =PointsModel.objects.create(user=user, brand=brand_var[0],points=points)
+            newpoint =PointsModel.objects.create(user=user, brand=brand_var[0],points=points,image_url=image_url,caption=caption)
             newpoint.save()
             return"You won points"
         else:
             return "Post Added"
 
 
-def verify_image(image_url):
+def check_image(image_url):
     app = ClarifaiApp(api_key=API_KEY)
     model = app.models.get("logo")
     response = model.predict_by_url(url=image_url)
@@ -293,3 +314,19 @@ def points_view(request):
     else:
         return redirect('/login/')
 
+def self_view(request):
+    user = check_validation(request)
+    if user:
+        posts = PostModel.objects.filter(user=user).order_by('-created_on')
+        for post in posts:
+            existing_like = LikeModel.objects.filter(post_id=post.id, user=user).first()
+            if existing_like:
+                post.has_liked = True
+        return render(request, 'feed.html', {'posts': posts,'user':user})
+    else:
+        return redirect('/login/')
+
+
+#def profile_page_view(request,username='trial123'):
+#    return render(request,'feed.html',{'user':UserModel.objects.get(username=username)})
+ #   redirect('/feed/')

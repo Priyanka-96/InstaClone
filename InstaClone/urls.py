@@ -17,17 +17,20 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from django.conf.urls import url
 from MyInsta.views import signup_view
-from MyInsta.views import login_view,feed_view,post_view,like_view,comment_view,logout_view,points_view
-
-
+from MyInsta.views import login_view,feed_view,post_view,like_view,comment_view,logout_view,points_view,upvote_view,self_view
 urlpatterns = [
-
+  url('self/',self_view),
+  #url('upvote/',upvote_view),
   url('points/', points_view),
   url('logout/', logout_view),
   url('like/', like_view),
   url('post/', post_view),
   url('feed/', feed_view),
   url('comment/',comment_view),
+ # url(r'^/(?P<username>\w+)/$', profile_page_view),
+
   url('login/', login_view),
   url('signup', signup_view),
+  #url(r'^(?P<username>\w+)/$', profile_page_view),
+
 ]

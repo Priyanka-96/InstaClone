@@ -3,26 +3,134 @@
 <head>
     <title>Points</title>
 
+<style>
+
+     .background-wrap{
+           position:fixed;
+           size:cover;
+            z-index:-1000;
+            width: 100%;
+            height: 100%;
+            overflow:hidden;
+            top: 0px;
+            left: 0px;
+        }
+      .container-main{
+            width:1000px;
+            height:280px;
+            text-align:center;
+            background-color: rgba(90,134,213,0.7);
+            margin-top: 150px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:2cm;
+        }
+     .main{
+
+            text-align:center;
+            font-size:60px;
+            font-weight:300;
+            color:white;
+            padding-top:0%;
+            margin-bottom:10px;
+
+
+        }
+ #video-bg-elem{
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom:0;
+            right:0;
+            min-width: 100%;
+            min-height: 100%;
+
+        }
+             header {
+      text-align: center;
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHsQzZECC4k0cBVDwKTWDQKyz0AxM9bmlLdO0y0uKMH5uLu21i');
+      background-size: cover;
+      color: white;
+    }
+     ul {
+      padding:10px;
+      background: rgba(0,0,0,0.5);
+    }
+    li {
+      display: inline;
+      padding: 0px 10px 0px 10px;
+    }
+    a {
+      color: white;
+    }
+    .btn-logout{
+
+              position:relative;
+            margin-top:18px;
+            padding:15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius:2px;
+            border: none;
+            background-color:black;
+            border-bottom:4px solid #27AE60;
+            margin-bottom:10px;
+            margin-left:600px;
+        }
+     .container
+        {
+        color:black;
+        }
+     table {
+           width: 100%;
+            border-collapse: collapse;
+        }
+
+    th{
+        height: 50px;
+       }
+    table, th, td {
+    border: 1px solid black;
+    }
+</style>
 </head>
 <body>
 
-    <div class="w3-bar w3-teal">
-        <h2 class="w3-center">Instagram</h2>
+
+    <div class="background-wrap">
+            <video id="video-bg-elem" preload="auto" autoplay="true" loop="loop" muted="true">
+                <source src="https://ak2.picdn.net/shutterstock/videos/23634712/preview/stock-footage-a-close-up-shot-of-likes-being-counted-with-thumping-hearts-on-a-social-network-page-flat-v.mp4" type="video/mp4">
+                Video not supported
+            </video>
     </div>
-    <div class="w3-bar w3-grey">
-        <a href="/feed/" class="w3-bar-item w3-button">Home</a>
-        <a href="/self/" class="w3-bar-item w3-button">{{user.name}}</a>
-        <a href="/post/" class="w3-bar-item w3-button">Add new Post</a>
-        <a href="/points/" class="w3-bar-item w3-button">Points</a>
+
+<div class="container-main">
+    <div class="main">
+
+                <h1> Instagram Clone</h1>
+                <h3>Points</h3>
+
+    </div>
+    </div>
+
+    <header>
+    <ul>
+
+        <li> <a href="/feed/" class="w3-bar-item w3-button">Home</a></li>
+        <li><a href="/self/" class="w3-bar-item w3-button">{{user.name}}</a></li>
+        <li><a href="/post/" class="w3-bar-item w3-button">Add new Post</a></li>
+        <li><a href="/points/" class="w3-bar-item w3-button">Points</a></li>
+    </ul>
+    </header>
         <form method="POST" action="/logout/" >
                 {% csrf_token %}
             <input type="submit" class="btn-logout" value="Logout" >
             </form>
 
     </div><br><br>
-<div class="w3-container  w3-half">
+<div class="container">
     <h2>Total Points: {{points_model.total_points}}</h2>
-    <table class="w3-table-all ">
+    <table >
     <thead>
       <tr class="w3-teal">
         <th>Brand Name</th>
@@ -37,16 +145,16 @@
             <td>{{data.brand.name}}</td>
             <td>{{data.points}}</td>
             <td>{{data.created_on}}</td>
-            <td>{{data.user.post.image_url}}</td>
-            <td>{{data.user.post.caption}}</td>
+            <td>{{data.image_url}}</td>
+            <td>{{data.caption}}</td>
         </tr>
     {% endfor %}
     </table>
 </div>
 
-<div class="w3-container  w3-half">
+<div class="container">
     <h2>List of Brands</h2>
-    <table class="w3-table-all ">
+    <table >
     <thead>
       <tr class="w3-teal">
         <th>Brand Name</th>

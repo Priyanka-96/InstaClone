@@ -2,15 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <style>
+      body{
+            margin:0 auto;
+           font-family: sans-serif;
+        }
+        .container-main{
+            width:1000px;
+            height:280px;
+            text-align:center;
+            background-color: rgba(90,134,213,0.7);
+            margin-top: 150px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:2cm;
+        }
+     .main{
+
+            text-align:center;
+            font-size:60px;
+            font-weight:300;
+            color:white;
+            padding-top:0%;
+            margin-bottom:10px;
+
+
+        }
+ #video-bg-elem{
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom:0;
+            right:0;
+            min-width: 100%;
+            min-height: 100%;
+
+        }
+    .btn-default{
+
+            position:relative;
+            margin-top:18px;
+            padding:15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius:2px;
+            border: none;
+            background-color:black;
+            border-bottom:4px solid #27AE60;
+            margin-bottom:10px;
+    }
+      .post{
+
+            width:500px;
+            height:70px;
+            text-align:center;
+
+            margin-top: 150px;
+            border-radius:4px;
+            margin:0 auto;
+            padding-bottom:2cm;
+
+        }
+     .background-wrap{
+           position:fixed;
+           size:cover;
+            z-index:-1000;
+            width: 100%;
+            height: 100%;
+            overflow:hidden;
+            top: 0px;
+            left: 0px;
+        }
+
+     p{
+
+            text-align:center;
+            color:black;
+        }
+        </style>
     <title>Title</title>
 </head>
 <body>
+ <div class="container-main">
+    <div class="main">
 
-    Successfully signed up! Please continue to login!
+                <h1> Instagram Clone</h1>
+                <h2>Login to continue :)</h2>
+            </div>
+    </div>
+<div class="background-wrap">
+            <video id="video-bg-elem" preload="auto" autoplay="true" loop="loop" muted="true">
+                <source src="https://ak3.picdn.net/shutterstock/videos/2829283/preview/stock-footage-laptop-keyboard.mp4" type="video/mp4">
+                Video not supported
+            </video>
+         </div>
+
+<p>Successfully signed up! Please continue to login!</p>
+ <div class="post" >
     <form action="/login/" method="get">
-        {{response}}
-        <input type="submit" class="btn btn-default" value="Login">
-    </form>
+        <p>{{response}}</p>
+        <input type="submit" class="btn-default" value="Login">
 
-</body>
+</form>
+        <span style="display:inline;">
+              <p style="color:black;font-size:120%;">Sign up to create other account?!</p>
+      <form action="/signup/" method="get">
+        <input type="submit" class="btn-default" value="Signup">
+
+      </form>
+        </span>
+
+ </div></body>
 </html>
